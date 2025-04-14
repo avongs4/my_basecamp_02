@@ -1,0 +1,14 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  username: postgres
+  password: B1983ball#
+  host: localhost
+
+development:
+  <<: *default
+  database: my_basecamp2_development
+
+test:
+  <<: *default
+  database: my_basecamp2_test
