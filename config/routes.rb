@@ -4,4 +4,6 @@ root to: "home#index"
 # devise_for :users
 
 # Optional: user profile routes
+resources :projects
+
 resources :users, only: [:show, :destroy]
