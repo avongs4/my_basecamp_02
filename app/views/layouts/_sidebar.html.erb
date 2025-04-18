@@ -1,0 +1,8 @@
+<nav class="sidebar">
+  <%= link_to "Projects", projects_path %><br>
+  <%= link_to "My Profile", user_path(current_user) %><br>
+  <% if current_user.admin? %>
+    <%= link_to "Admin", admin_users_path %><br>
+  <% end %>
+  <%= button_to "Logout", destroy_user_session_path, method: :delete %>
+</nav>

@@ -1,9 +1,8 @@
-def set_admin
-  update(admin: true)
+class User < ApplicationRecord
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
+  has_many :project_users
+  has_many :projects, through: :project_users
 end
-
-def remove_admin
-  update(admin: false)
-end
-
-has_many :projects, dependent: :destroy

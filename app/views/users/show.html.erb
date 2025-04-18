@@ -1,0 +1,30 @@
+<h1><%= @user.email %>'s Profile</h1>
+
+<p><strong>Admin:</strong> <%= @user.admin? ? "Yes" : "No" %></p>
+
+<% if current_user.admin? && current_user != @user %>
+  <% if @user.admin? %>
+    <%= button_to "Remove Admin", remove_admin_user_path(@user), method: :patch, class: "btn btn-warning" %>
+  <% else %>
+    <%= button_to "Make Admin", set_admin_user_path(@user), method: :patch, class: "btn btn-success" %>
+  <% end %>
+<% end %>
+
+<%= link_to "Delete Account", user_path(@user), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger" %>
+
+<h2>Projects</h2>
+<ul>
+  <% if @projects.any? %>  <!-- Check if there are projects -->
+    <% @projects.each do |project| %>
+      <li>
+        <%= link_to project.title, project_path(project) %>
+        (<%= link_to "Edit", edit_project_path(project) %>, 
+         <%= link_to "Delete", project_path(project), method: :delete, data: { confirm: "Are you sure?" } %>)
+      </li>
+    <% end %>
+  <% else %>
+    <p>No projects available.</p>  <!-- Message if no projects -->
+  <% end %>
+</ul>
+
+<%= link_to "New Project", new_project_path, class: "btn btn-primary" %>

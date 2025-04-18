@@ -1,9 +1,22 @@
-root to: "home#index"
+# config/routes.rb
+Rails.application.routes.draw do
+  root to: "home#index"
 
-# Devise user routes already added:
-# devise_for :users
+  # ✅ This must be outside of any class or scope
+  devise_for :users
 
-# Optional: user profile routes
-resources :projects
+  get '/dashboard', to: 'dashboard#show', as: :dashboard
 
-resources :users, only: [:show, :destroy]
+
+  namespace :admin do
+    resources :users, only: [:index, :destroy] do
+      member do
+        patch :set_admin
+        patch :remove_admin
+      end
+    end
+  end
+
+  resources :users, only: [:show]
+  resources :projects
+end

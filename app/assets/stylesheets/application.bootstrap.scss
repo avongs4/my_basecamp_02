@@ -1,4 +1,10 @@
-@import "bootstrap";
+// app/assets/stylesheets/application.scss or similar
 
-@import 'bootstrap/scss/bootstrap';
-@import 'bootstrap-icons/font/bootstrap-icons';
+@import "landing";
+
+
+// Import Bootstrap SCSS framework
+@import "bootstrap/scss/bootstrap";
+
+// Import Bootstrap Icons
+@import "bootstrap-icons/font/bootstrap-icons";

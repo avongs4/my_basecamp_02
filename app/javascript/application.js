@@ -1,6 +1,13 @@
-// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
-import "bootstrap"
+// app/javascript/application.js
+import Rails from "@rails/ujs"
+Rails.start()
 
 import "@hotwired/turbo-rails"
 import "controllers"
+
+import "bootstrap"
 import * as bootstrap from "bootstrap"
+
+// Optional jQuery (if you're using it)
+import "jquery"
+import "jquery_ujs"

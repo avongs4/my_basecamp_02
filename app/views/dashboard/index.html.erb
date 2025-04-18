@@ -1,0 +1,14 @@
+<h2>Welcome, <%= current_user.name %>!</h2>
+
+<div class="my-4">
+  <%= link_to "Create New Project", new_project_path, class: "btn btn-primary me-2" %>
+</div>
+
+<h4>My Projects</h4>
+<% @projects.each do |project| %>
+  <div class="card mb-2 p-3">
+    <strong><%= project.title %></strong>
+    <p><%= project.description %></p>
+    <%= link_to "View", project_path(project), class: "btn btn-sm btn-outline-secondary" %>
+  </div>
+<% end %>
