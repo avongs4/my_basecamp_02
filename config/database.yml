@@ -17,11 +17,9 @@ test:
   database: mybasecamp2_test
 
 production:
-  primary: &primary_production
-    <<: *default
-    database: mybasecamp2_production
-    username: mybasecamp2
-    password: <%= ENV["MYBASECAMP2_DATABASE_PASSWORD"] %>
+  <<: *default
+  url: <%= ENV['DATABASE_URL'] %>
+
   cache:
     <<: *primary_production
     database: mybasecamp2_production_cache
