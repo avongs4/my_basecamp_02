@@ -38,8 +38,8 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
 
   # Active Job
-  config.active_job.queue_adapter = :solid_queue
-  config.solid_queue.connects_to = { database: { writing: :queue } }
+  # config.active_job.queue_adapter = :solid_queue
+  # config.solid_queue.connects_to = { database: { writing: :queue } }
 
   # Internationalization
   config.i18n.fallbacks = true
