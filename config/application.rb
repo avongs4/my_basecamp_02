@@ -11,19 +11,19 @@ module Mybasecamp2
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.0
 
+    # Set Active Job queue adapter
     config.active_job.queue_adapter = :async
 
+    # Autoload and eager load paths
+    config.autoload_paths += %W(#{config.root}/lib)
+    config.eager_load_paths += %W(#{config.root}/lib)
 
-    # Please, add to the `ignore` list any other `lib` subdirectories that do
-    # not contain `.rb` files, or that should not be reloaded or eager loaded.
-    # Common ones are `templates`, `generators`, or `middleware`, for example.
-    config.autoload_lib(ignore: %w[assets tasks])
+    # If you want to ignore some lib subfolders like assets or tasks:
+    # Just ensure they don't have .rb files or won't be accidentally loaded.
+    # You do not need to use `config.autoload_lib` – that's not a valid Rails method.
+    # Instead, just avoid adding those directories to autoload paths.
 
-    # Configuration for the application, engines, and railties goes here.
-    #
-    # These settings can be overridden in specific environments using the files
-    # in config/environments, which are processed later.
-    #
+    # Custom configuration
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
   end
