@@ -1,0 +1,31 @@
+<h2><%= @discussion_thread.title %></h2>
+<p class="text-muted">By <%= @discussion_thread.user.email %></p>
+<p><%= @discussion_thread.content %></p>
+
+<hr>
+
+<h4>Messages</h4>
+<% if @discussion_thread.messages.any? %>
+  <% @discussion_thread.messages.each do |message| %>
+    <div class="card mb-2">
+      <div class="card-body">
+        <p><%= message.content %></p>
+        <small class="text-muted">By <%= message.user.email %></small>
+        <% if message.user == current_user %>
+          <div class="mt-2">
+            <%= link_to "Edit", edit_project_discussion_thread_message_path(@project, @discussion_thread, message), class: "btn btn-sm btn-outline-secondary" %>
+            <%= link_to "Delete", project_discussion_thread_message_path(@project, @discussion_thread, message), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-danger" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% else %>
+  <p class="text-muted">No messages yet.</p>
+<% end %>
+
+<% if @project.users.include?(current_user) %>
+  <%= render 'messages/form', discussion_thread: @discussion_thread %>
+<% end %>
+
+<%= link_to "Back to Project", project_path(@project), class: "btn btn-secondary mt-3" %>

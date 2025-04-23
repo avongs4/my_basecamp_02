@@ -1,10 +1,14 @@
-// app/assets/stylesheets/application.scss or similar
+@import "bootstrap";
 
-@import "landing";
+/* Custom styling */
+body {
+  font-family: "Segoe UI", sans-serif;
+}
 
+.navbar .nav-link {
+  color: white !important;
+}
 
-// Import Bootstrap SCSS framework
-@import "bootstrap/scss/bootstrap";
-
-// Import Bootstrap Icons
-@import "bootstrap-icons/font/bootstrap-icons";
+.navbar .nav-link:hover {
+  text-decoration: underline;
+}

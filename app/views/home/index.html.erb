@@ -1,22 +1,7 @@
-<!-- Hero Section -->
-<section class="text-center py-5">
-  <h1 class="display-4 fw-bold">Welcome to MyBasecamp</h1>
-  <p class="lead">Organize. Collaborate. Succeed.</p>
-  <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-primary btn-lg me-3" %>
-  <%= link_to "Login", new_user_session_path, class: "btn btn-outline-secondary btn-lg" %>
-</section>
+<h1>Welcome to MyBasecamp2</h1>
 
-<!-- Features Section -->
-<section class="bg-light py-5 text-center">
-  <h2 class="mb-4">Why MyBasecamp?</h2>
-  <div class="row">
-    <div class="col-md-4">✔️ Plan with Ease</div>
-    <div class="col-md-4">✔️ Collaborate Easily</div>
-    <div class="col-md-4">✔️ Track Progress</div>
-  </div>
-</section>
-
-<!-- Footer -->
-<footer class="bg-dark text-white text-center py-4 mt-5">
-  <p>© 2025 MyBasecamp. All rights reserved.</p>
-</footer>
+<% if user_signed_in? %>
+  <p>Hello, <strong><%= current_user.name %></strong></p>
+<% else %>
+  
+<% end %>

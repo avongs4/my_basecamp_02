@@ -1,0 +1,7 @@
+<%= form_with(model: [discussion_thread, discussion_thread.messages.new], local: true) do |f| %>
+    <div class="mb-3">
+      <%= f.text_area :content, class: "form-control", placeholder: "Write your message..." %>
+    </div>
+    <%= f.submit "Post Message", class: "btn btn-primary" %>
+  <% end %>
+  

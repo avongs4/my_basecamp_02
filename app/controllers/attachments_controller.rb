@@ -14,12 +14,12 @@ class AttachmentsController < ApplicationController
     end
   
     def destroy
-      @attachment = @project.attachments.find(params[:id])
+      @attachment = Attachment.find(params[:id])
       if @attachment.user == current_user
         @attachment.destroy
-        redirect_to @project, notice: "File deleted."
+        redirect_to project_path(@project), notice: 'Attachment was successfully deleted.'
       else
-        redirect_to @project, alert: "Not authorized."
+        redirect_to project_path(@project), alert: 'You are not authorized to delete this attachment.'
       end
     end
   

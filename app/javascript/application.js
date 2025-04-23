@@ -1,13 +1,17 @@
 // app/javascript/application.js
-import Rails from "@rails/ujs"
-Rails.start()
 
+// Turbo for page transitions
 import "@hotwired/turbo-rails"
+
+
+
+// Bootstrap (you’ve pinned it correctly)
+import "bootstrap"
+import "@popperjs/core"
+
+// Stimulus controllers (optional but good)
 import "controllers"
 
-import "bootstrap"
-import * as bootstrap from "bootstrap"
-
-// Optional jQuery (if you're using it)
-import "jquery"
-import "jquery_ujs"
+// Rails UJS for method: :delete in link_to
+import Rails from "@rails/ujs"
+Rails.start()

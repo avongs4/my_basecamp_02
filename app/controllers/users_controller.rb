@@ -1,41 +1,40 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user, only: [:show, :set_admin, :remove_admin, :destroy]
+  before_action :require_admin, only: [:index, :set_admin, :remove_admin]
+
+  def index
+    @users = User.all
+  end
 
   def show
-    @projects = @user.projects  # Assuming a User has_many Projects
-  end
-
-  def set_admin
-    if current_user.admin?
-      @user.make_admin!
-      redirect_to user_path(@user), notice: "User promoted to admin"
-    else
-      redirect_to root_path, alert: "You are not authorized to do that"
-    end
-  end
-
-  def remove_admin
-    if current_user.admin?
-      @user.remove_admin!
-      redirect_to user_path(@user), notice: "Admin rights removed"
-    else
-      redirect_to root_path, alert: "You are not authorized to do that"
-    end
+    @user = User.find(params[:id])
   end
 
   def destroy
-    if current_user == @user || current_user.admin?
-      @user.destroy
-      redirect_to root_path, notice: "Account deleted"
+    @user = current_user
+    @user.destroy
+    redirect_to root_path, notice: "Account deleted successfully."
+  end
+
+  def set_admin
+    user = User.find(params[:id])
+    user.update(admin: true)
+    redirect_to user_path(user), notice: "#{user.name} is now an admin."
+  end
+
+  def remove_admin
+    user = User.find(params[:id])
+    if user == current_user
+      redirect_to user_path(user), alert: "You cannot demote yourself."
     else
-      redirect_to root_path, alert: "You can't delete this user"
+      user.update(admin: false)
+      redirect_to user_path(user), notice: "#{user.name} is no longer an admin."
     end
   end
 
   private
 
-  def set_user
-    @user = User.find(params[:id])
+  def require_admin
+    redirect_to root_path, alert: "You are not authorized." unless current_user.admin?
   end
 end

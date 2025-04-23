@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_23_105205) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_22_141445) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -51,22 +51,42 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_23_105205) do
     t.index ["user_id"], name: "index_attachments_on_user_id"
   end
 
-  create_table "project_users", force: :cascade do |t|
-    t.bigint "project_id", null: false
+  create_table "discussion_threads", force: :cascade do |t|
+    t.string "title"
+    t.text "content"
     t.bigint "user_id", null: false
+    t.bigint "project_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["project_id"], name: "index_project_users_on_project_id"
-    t.index ["user_id"], name: "index_project_users_on_user_id"
+    t.index ["project_id"], name: "index_discussion_threads_on_project_id"
+    t.index ["user_id"], name: "index_discussion_threads_on_user_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.text "content"
+    t.bigint "user_id", null: false
+    t.bigint "discussion_thread_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["discussion_thread_id"], name: "index_messages_on_discussion_thread_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
+  create_table "project_memberships", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "project_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_project_memberships_on_project_id"
+    t.index ["user_id"], name: "index_project_memberships_on_user_id"
   end
 
   create_table "projects", force: :cascade do |t|
     t.string "title"
     t.text "description"
-    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_projects_on_user_id"
+    t.string "name"
   end
 
   create_table "users", force: :cascade do |t|
@@ -77,8 +97,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_23_105205) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "admin"
     t.string "name"
+    t.boolean "admin"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -87,7 +107,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_23_105205) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "attachments", "projects"
   add_foreign_key "attachments", "users"
-  add_foreign_key "project_users", "projects"
-  add_foreign_key "project_users", "users"
-  add_foreign_key "projects", "users"
+  add_foreign_key "discussion_threads", "projects"
+  add_foreign_key "discussion_threads", "users"
+  add_foreign_key "messages", "discussion_threads"
+  add_foreign_key "messages", "users"
+  add_foreign_key "project_memberships", "projects"
+  add_foreign_key "project_memberships", "users"
 end

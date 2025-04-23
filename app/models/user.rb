@@ -2,9 +2,12 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  validates :name, presence: true
+         has_many :attachments, dependent: :nullify
+         has_many :discussion_threads, dependent: :destroy
+         has_many :messages, dependent: :destroy
 
-  def admin?
-    self.admin
-  end
+
+
+
+  validates :name, presence: true
 end

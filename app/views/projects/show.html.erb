@@ -1,12 +1,82 @@
-<h2><%= @project.title %></h2>
+<h1><%= @project.title %></h1>
+
+<p><strong>Description:</strong></p>
 <p><%= @project.description %></p>
 
-<h4>Team Members</h4>
-<ul>
-  <% @project.users.each do |user| %>
-    <li><%= user.name %> (<%= user.role %>)</li>
+<hr>
+
+<%= link_to "Edit Project", edit_project_path(@project), class: "btn btn-secondary me-2" %>
+<%= link_to "Back to Projects", projects_path, class: "btn btn-outline-primary" %>
+
+<hr>
+
+<h3>Attachments</h3>
+
+<% if user_signed_in? && @project.users.include?(current_user) %>
+  <%= form_with model: [@project, Attachment.new], local: true, html: { multipart: true }, class: "mb-4" do |f| %>
+    <div class="mb-3">
+      <%= f.label :file, class: "form-label" %>
+      <%= f.file_field :file, class: "form-control" %>
+    </div>
+    <%= f.submit "Upload", class: "btn btn-primary" %>
+  <% end %>
+<% end %>
+
+<ul class="list-group">
+  <% @project.attachments.each do |attachment| %>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <%= link_to attachment.file.filename.to_s, rails_blob_url(attachment.file, disposition: "attachment"), target: "_blank" %>
+
+      <% if attachment.user == current_user %>
+        <%= form_with url: project_attachment_path(@project, attachment), method: :delete, local: true, class: "d-inline" do %>
+          <%= submit_tag 'Delete', data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>
+        <% end %>
+      <% end %>
+    </li>
   <% end %>
 </ul>
 
-<%= link_to "Edit", edit_project_path(@project), class: "btn btn-warning" if current_user.admin? || project.creator? %>
-<%= link_to "Delete", project_path(@project), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger" if current_user.admin? || project.creator? %>
+<hr>
+
+<h3>Discussion Threads</h3>
+
+<% if current_user.admin? && @project.users.include?(current_user) %>
+  <%= link_to "New Thread", new_project_discussion_thread_path(@project), class: "btn btn-outline-success mb-3" %>
+<% end %>
+
+<% if @project.discussion_threads.any? %>
+  <% @project.discussion_threads.each do |thread| %>
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5><%= link_to thread.title, project_discussion_thread_path(@project, thread) %></h5>
+        <small class="text-muted">By <%= thread.user.email %></small>
+      </div>
+
+      <div class="card-body">
+        <p><%= thread.content %></p>
+
+        <h6>Messages</h6>
+        <% thread.messages.each do |message| %>
+          <div class="card mb-2">
+            <div class="card-body">
+              <p><%= message.content %></p>
+              <small class="text-muted">By <%= message.user.email %></small>
+              <% if message.user == current_user %>
+                <div class="mt-2">
+                  <%= link_to "Edit", edit_project_discussion_thread_message_path(@project, thread, message), class: "btn btn-sm btn-outline-secondary" %>
+                  <%= link_to "Delete", project_discussion_thread_message_path(@project, thread, message), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-danger" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <% if @project.users.include?(current_user) %>
+          <%= render 'messages/form', discussion_thread: thread %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% else %>
+  <p class="text-muted">No threads have been created yet.</p>
+<% end %>
