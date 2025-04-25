@@ -8,7 +8,8 @@ Rails.application.configure do
   config.eager_load = true
 
   # Show full error reports — TEMP: Turn this off in production
-  config.consider_all_requests_local = true
+  config.consider_all_requests_local = false
+
 
   # Asset pipeline config
   config.assets.compile = false
@@ -17,9 +18,19 @@ Rails.application.configure do
     "Cache-Control" => "public, max-age=#{1.year.to_i}"
   }
 
-  # Caching
-  config.action_controller.perform_caching = true
-  config.cache_store = :solid_cache_store
+# Caching (Redis)
+config.action_controller.perform_caching = true
+config.cache_store = :redis_cache_store, {
+  url: ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" },
+  error_handler: -> (method:, returning:, exception:) {
+    Rails.logger.error "Redis cache error: #{exception}"
+  }
+}
+
+# Show full error reports (set to false in production)
+config.consider_all_requests_local = false
+
+
 
   # Active Storage
   config.active_storage.service = :local # TEMP: change to :amazon for production
@@ -37,11 +48,6 @@ Rails.application.configure do
   # Deprecation warnings
   config.active_support.report_deprecations = false
 
-  # Active Job
-  # config.active_job.queue_adapter = :solid_queue
-  # config.solid_queue.connects_to = { database: { writing: :queue } }
-
-  # Internationalization
   config.i18n.fallbacks = true
 
   # Schema dump
@@ -51,19 +57,4 @@ Rails.application.configure do
   # Mailer
   config.action_mailer.default_url_options = { host: "example.com" }
 
-  # Uncomment and configure if sending emails
-  # config.action_mailer.raise_delivery_errors = false
-  # config.action_mailer.smtp_settings = {
-  #   user_name: Rails.application.credentials.dig(:smtp, :user_name),
-  #   password: Rails.application.credentials.dig(:smtp, :password),
-  #   address: "smtp.example.com",
-  #   port: 587,
-  #   authentication: :plain
-  # }
-
-  # Uncomment to restrict allowed hosts (e.g., on Render or Heroku)
-  # config.hosts << "your-app.onrender.com"
-
-  # Optional: Allow requests to the healthcheck path without host validation
-  # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end

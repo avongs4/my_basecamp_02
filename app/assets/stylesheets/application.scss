@@ -1,0 +1,15 @@
+// app/assets/stylesheets/application.scss
+
+@import "bootstrap"; // This pulls in Bootstrap’s SCSS
+
+body {
+  font-family: "Segoe UI", sans-serif;
+}
+
+.navbar .nav-link {
+  color: white !important;
+}
+
+.navbar .nav-link:hover {
+  text-decoration: underline;
+}

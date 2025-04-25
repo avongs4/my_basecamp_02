@@ -23,7 +23,8 @@ class DiscussionThreadsController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+  end
 
   def update
     if @discussion_thread.update(discussion_thread_params)

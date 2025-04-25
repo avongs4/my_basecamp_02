@@ -13,6 +13,8 @@ module Mybasecamp2
 
     # Set Active Job queue adapter
     config.active_job.queue_adapter = :async
+    config.api_only = false
+
 
     # Autoload and eager load paths
     config.autoload_paths += %W(#{config.root}/lib)

@@ -30,6 +30,9 @@ gem "solid_cache"
 
 gem 'devise'
 
+gem "bootstrap", "~> 5.3"
+
+
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
