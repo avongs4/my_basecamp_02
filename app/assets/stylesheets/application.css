@@ -1,6 +1,6 @@
-// app/assets/stylesheets/application.scss
+/* app/assets/stylesheets/application.css */
 
-@import "bootstrap"; // This pulls in Bootstrap’s SCSS
+/* @import "bootstrap"; This pulls in Bootstrap’s CSS */
 
 body {
   font-family: "Segoe UI", sans-serif;

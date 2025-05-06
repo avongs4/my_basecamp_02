@@ -13,3 +13,4 @@ pin "@popperjs/core", to: "@popperjs--core.js" # @2.11.8
 pin "@rails/ujs", to: "rails-ujs.js"
 
 pin "@rails/ujs", to: "https://ga.jspm.io/npm:@rails/ujs@7.1.3/lib/assets/compiled/rails-ujs.js"
+pin "bootstrap", to: "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"

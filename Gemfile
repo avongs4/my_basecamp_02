@@ -32,6 +32,9 @@ gem 'devise'
 
 gem "bootstrap", "~> 5.3"
 
+gem "dartsass-sprockets"
+
+
 
 
 # Reduces boot times through caching; required in config/boot.rb
