@@ -30,6 +30,9 @@ gem "solid_cable"
 
 gem 'cancancan', '~> 3.0'
 
+gem 'activerecord-database-url'
+
+
 
 gem 'devise'
 
