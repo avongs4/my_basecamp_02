@@ -1,15 +1,4 @@
-/* app/assets/stylesheets/application.css */
-
-/* @import "bootstrap"; This pulls in Bootstrap’s CSS */
-
-body {
-  font-family: "Segoe UI", sans-serif;
-}
-
-.navbar .nav-link {
-  color: white !important;
-}
-
-.navbar .nav-link:hover {
-  text-decoration: underline;
-}
+/*
+ *= require_tree .
+ *= require_self
+ */

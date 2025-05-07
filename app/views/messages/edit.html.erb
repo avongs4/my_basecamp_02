@@ -1,11 +1,12 @@
-<h2>Edit Message</h2>
+<div class="container">
+  <h3>Edit Message</h3>
 
-<%= form_with model: [@project, @discussion_thread, @message], local: true do |f| %>
-  <div class="mb-3">
-    <%= f.label :content %>
-    <%= f.text_area :content, class: "form-control", rows: 4 %>
-  </div>
-
-  <%= f.submit "Update Message", class: "btn btn-success" %>
-  <%= link_to "Back to Thread", project_discussion_thread_path(@project, @discussion_thread), class: "btn btn-secondary" %>
-<% end %>
+  <%= form_with model: [@project, @discussion_thread, @message], local: true do |f| %>
+    <div class="mb-3">
+      <%= f.label :content, class: "form-label" %>
+      <%= f.text_area :content, class: "form-control", rows: 4 %>
+    </div>
+    <%= f.submit "Update Message", class: "btn btn-primary" %>
+    <%= link_to "Back", project_discussion_thread_path(@project, @discussion_thread), class: "btn btn-secondary ms-2" %>
+  <% end %>
+</div>

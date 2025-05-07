@@ -1,42 +1,45 @@
 class DiscussionThreadsController < ApplicationController
-  before_action :authenticate_user!
   before_action :set_project
-  before_action :set_discussion_thread, only: [:show, :edit, :update, :destroy]
-  before_action :authorize_admin!, only: [:new, :create, :edit, :update, :destroy]
-
-  def show
-    @message = Message.new
-  end
+  before_action :set_thread, only: [:edit, :update, :destroy]
+  before_action :require_admin!
 
   def new
     @discussion_thread = @project.discussion_threads.new
   end
 
   def create
-    @discussion_thread = @project.discussion_threads.new(discussion_thread_params)
+    @discussion_thread = @project.discussion_threads.new(thread_params)
     @discussion_thread.user = current_user
-
     if @discussion_thread.save
-      redirect_to project_path(@project), notice: "Thread created."
+      redirect_to project_path(@project), notice: "Thread created!"
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
-  def edit
+  def show
+    @project = Project.find(params[:project_id])
+    @thread = @project.discussion_threads.find(params[:id])
+    @messages = @thread.messages.includes(:user)
+    @message = Message.new
   end
+  
+  
+
+
+  def edit; end
 
   def update
-    if @discussion_thread.update(discussion_thread_params)
-      redirect_to project_path(@project), notice: "Thread updated."
+    if @discussion_thread.update(thread_params)
+      redirect_to project_path(@project), notice: "Thread updated!"
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
     @discussion_thread.destroy
-    redirect_to project_path(@project), notice: "Thread deleted."
+    redirect_to project_path(@project), notice: "Thread deleted!"
   end
 
   private
@@ -45,17 +48,17 @@ class DiscussionThreadsController < ApplicationController
     @project = Project.find(params[:project_id])
   end
 
-  def set_discussion_thread
+  def set_thread
     @discussion_thread = @project.discussion_threads.find(params[:id])
   end
 
-  def discussion_thread_params
-    params.require(:discussion_thread).permit(:title, :content)
+  def thread_params
+    params.require(:discussion_thread).permit(:title)
   end
 
-  def authorize_admin!
-    unless @project.users.include?(current_user) && current_user.admin?
-      redirect_to project_path(@project), alert: "Not authorized."
+  def require_admin!
+    unless current_user.admin?
+      redirect_to root_path, alert: "Access denied."
     end
   end
 end

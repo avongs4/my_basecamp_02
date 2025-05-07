@@ -1,16 +1,2 @@
-<h2>Edit Thread</h2>
-
-<%= form_with model: [@project, @discussion_thread], local: true do |f| %>
-  <div class="mb-3">
-    <%= f.label :title %>
-    <%= f.text_field :title, class: "form-control" %>
-  </div>
-
-  <div class="mb-3">
-    <%= f.label :content %>
-    <%= f.text_area :content, rows: 5, class: "form-control" %>
-  </div>
-
-  <%= f.submit "Update Thread", class: "btn btn-success" %>
-  <%= link_to "Back to Project", project_path(@project), class: "btn btn-secondary" %>
-<% end %>
+<h3>Edit Thread</h3>
+<%= render "form", project: @project, discussion_thread: @discussion_thread %>

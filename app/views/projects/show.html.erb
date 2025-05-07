@@ -1,121 +1,82 @@
-<h1><%= @project.title %></h1>
-
-<p><strong>Description:</strong></p>
+<h2><%= @project.name %></h2>
 <p><%= @project.description %></p>
 
+<h4 class="mt-4">Team Members</h4>
+<ul class="list-group">
+  <% @project.users.each do |user| %>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <span><%= user.name %> (<%= user.email %>)</span>
+      <% if (current_user.admin? || @project.creator == current_user) && user != current_user %>
+        <%= button_to "Remove", project_membership_path(@project, user.id),
+                      method: :delete,
+                      data: { confirm: "Remove user from project?" },
+                      class: "btn btn-sm btn-danger" %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
+
+<% if current_user.admin? || @project.creator == current_user %>
+  <div class="mb-4 mt-4">
+    <h5 class="text-muted">Invite a user to this project</h5>
+    <%= form_with url: project_memberships_path(@project), method: :post, local: true do |f| %>
+      <div class="form-group">
+        <%= label_tag :email, "User Email" %>
+        <%= text_field_tag :email, nil, class: "form-control" %>
+      </div>
+      <%= f.submit "Invite", class: "btn btn-primary mt-2" %>
+    <% end %>
+  </div>
+<% end %>
+
 <hr>
 
-<%= link_to "Edit Project", edit_project_path(@project), class: "btn btn-secondary me-2" %>
-<%= link_to "Back to Projects", projects_path, class: "btn btn-outline-primary" %>
+<h4>Attachments</h4>
+<ul class="list-group">
+<% @project.attachments.each do |attachment| %>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    <span><%= link_to attachment.file.filename.to_s, rails_blob_path(attachment.file, disposition: "attachment") %></span>
 
-<%#= debug current_user %>
+    <% if attachment.user == current_user %>
+      <%= button_to "Delete", project_attachment_path(@project, attachment),
+                    method: :delete,
+                    class: "btn btn-sm btn-danger" %>
+    <% end %>
+  </li>
+<% end %>
+</ul>
+
+<% if @project.users.include?(current_user) %>
+  <div class="mt-3">
+    <%= form_with(model: [@project, Attachment.new], local: true, html: { multipart: true }) do |form| %>
+      <div class="form-group">
+        <%= form.label :file %>
+        <%= form.file_field :file, class: "form-control" %>
+      </div>
+      <%= form.submit "Upload", class: "btn btn-primary mt-2" %>
+    <% end %>
+  </div>
+<% end %>
 
 <hr>
 
-<h4>Admins</h4>
-<ul class="list-group mb-3">
-  <% @project.admins.each do |admin| %>
-    <li class="list-group-item"><strong><%= admin.name %></strong> (<%= admin.email %>)</li>
+<h4>Threads</h4>
+<ul class="list-group">
+  <% @threads.each do |thread| %>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <span><%= link_to thread.title, project_discussion_thread_path(@project, thread) %></span>
+      <% if current_user.admin? %>
+        <div class="d-flex">
+          <%= link_to "Edit", edit_project_discussion_thread_path(@project, thread), class: "btn btn-sm btn-secondary me-3" %>
+          <%= button_to "Delete", project_discussion_thread_path(@project, thread),
+                        method: :delete,
+                        class: "btn btn-sm btn-danger ms-1" %>
+        </div>
+      <% end %>
+    </li>
   <% end %>
 </ul>
 
 <% if current_user.admin? %>
-  <h4>Assign Users to This Project</h4>
-  <%= form_with url: add_user_project_path(@project), method: :post, local: true do |form| %>
-    <div class="input-group mb-3">
-      <%= select_tag :user_id, options_from_collection_for_select(User.all - @project.users, :id, :email), class: "form-select" %>
-      <button class="btn btn-outline-primary" type="submit">Add User</button>
-    </div>
-  <% end %>
-<% end %>
-
-<hr>
-
-<h3>Attachments</h3>
-
-<% if user_signed_in? && @project.users.include?(current_user) %>
-  <%= form_with model: [@project, Attachment.new], local: true, html: { multipart: true }, class: "mb-4" do |f| %>
-    <div class="mb-3">
-      <%= f.label :file, class: "form-label" %>
-      <%= f.file_field :file, class: "form-control" %>
-    </div>
-    <%= f.submit "Upload", class: "btn btn-primary" %>
-  <% end %>
-<% end %>
-
-<% if @project.attachments.any? %>
-  <ul class="list-group">
-    <% @project.attachments.each do |attachment| %>
-      <li class="list-group-item d-flex justify-content-between align-items-center">
-        <%= link_to attachment.file.filename.to_s, rails_blob_url(attachment.file, disposition: "attachment"), target: "_blank" %>
-        <% if attachment.user == current_user %>
-          <%= form_with url: project_attachment_path(@project, attachment), method: :delete, local: true, class: "d-inline" do %>
-            <%= submit_tag 'Delete', data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>
-          <% end %>
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p class="text-muted">No attachments uploaded yet.</p>
-<% end %>
-
-<hr>
-
-<h3>Discussion Threads</h3>
-
-<% if current_user.admin? && @project.users.include?(current_user) %>
-  <%= link_to "New Thread", new_project_discussion_thread_path(@project), class: "btn btn-outline-success mb-3" %>
-<% end %>
-
-<% if @project.discussion_threads.any? %>
-  <% @project.discussion_threads.each do |thread| %>
-    <div class="card mb-4">
-      <div class="card-header">
-        <h5><%= link_to thread.title, project_discussion_thread_path(@project, thread) %></h5>
-        <small class="text-muted">By <%= thread.user.email %></small>
-      </div>
-
-      <div class="card-body">
-        <p><%= thread.content %></p>
-
-        <% if current_user.admin? && @project.users.include?(current_user) %>
-          <div class="mb-3">
-            <%= link_to "Edit Thread", edit_project_discussion_thread_path(@project, thread), class: "btn btn-sm btn-outline-secondary me-2" %>
-            <%= link_to "Delete Thread", project_discussion_thread_path(@project, thread), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-danger" %>
-          </div>
-        <% end %>
-
-        <h6>Messages</h6>
-        <% thread.messages.each do |message| %>
-          <div class="card mb-2">
-            <div class="card-body">
-              <p><%= message.content %></p>
-              <small class="text-muted">By <%= message.user.email %></small>
-
-              <% if message.user == current_user || current_user.admin? %>
-                <div class="mt-2">
-                  <%= link_to "Edit", edit_project_discussion_thread_message_path(@project, thread, message), class: "btn btn-sm btn-outline-secondary" %>
-                  <%= link_to "Delete", project_discussion_thread_message_path(@project, thread, message), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-danger" %>
-                </div>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-
-        <% if @project.users.include?(current_user) %>
-          <hr>
-          <%= form_with model: [thread.project, thread, Message.new], local: true do |f| %>
-            <div class="mb-3">
-              <%= f.label :content, "Your Message", class: "form-label" %>
-              <%= f.text_area :content, class: "form-control", rows: 3 %>
-            </div>
-            <%= f.submit "Post Message", class: "btn btn-primary" %>
-          <% end %>
-        <% end %>
-      </div>
-    </div>
-  <% end %>
-<% else %>
-  <p class="text-muted">No threads have been created yet.</p>
+  <%= link_to "New Thread", new_project_discussion_thread_path(@project), class: "btn btn-primary mt-3" %>
 <% end %>

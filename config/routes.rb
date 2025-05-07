@@ -1,10 +1,19 @@
 Rails.application.routes.draw do
-  # Devise routes with custom RegistrationsController
-  devise_for :users, controllers: {
-    registrations: 'users/registrations'
-  }
+  devise_for :users
 
-  # User admin controls
+  resources :projects do
+    resources :memberships, only: [:create, :destroy]
+
+    resources :attachments, only: [:new, :create, :destroy]
+
+    resources :discussion_threads, only: [:show, :new, :create, :edit, :update, :destroy] do
+
+
+      
+      resources :messages, only: [:new, :create, :edit, :update, :destroy]
+    end
+  end
+
   resources :users, only: [:index, :show, :destroy] do
     member do
       patch :set_admin
@@ -12,18 +21,5 @@ Rails.application.routes.draw do
     end
   end
 
-  # Project and nested resources
-  resources :projects, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
-    resources :attachments, only: [:create, :destroy]
-    resources :discussion_threads, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
-      resources :messages, only: [:create, :edit, :update, :destroy]
-    end
-
-    member do
-      post :add_user
-    end
-  end
-
-  # Root path
-  root to: "home#index", as: :home
+  root "home#index"
 end

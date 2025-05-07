@@ -1,13 +1,12 @@
+# app/models/project.rb
 class Project < ApplicationRecord
-  has_many :project_memberships
-  has_many :users, through: :project_memberships
-  has_many :attachments, dependent: :destroy
-  has_many :discussion_threads, dependent: :destroy
+    has_many :memberships, dependent: :destroy
+    has_many :users, through: :memberships
+    has_many :attachments, dependent: :destroy
+    has_many :discussion_threads, dependent: :destroy
 
-  def admins
-    users.where(admin: true)
-  end
+    belongs_to :creator, class_name: "User", foreign_key: "creator_id"
+
   
-
-  validates :title, presence: true
-end
+    validates :name, presence: true
+  end

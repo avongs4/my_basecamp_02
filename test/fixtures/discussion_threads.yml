@@ -2,12 +2,10 @@
 
 one:
   title: MyString
-  content: MyText
-  user: one
   project: one
+  user: one
 
 two:
   title: MyString
-  content: MyText
-  user: two
   project: two
+  user: two

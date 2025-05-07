@@ -1,33 +1,35 @@
-<h2><%= @discussion_thread.title %></h2>
-<p class="text-muted">By <%= @discussion_thread.user.email %></p>
-<hr>
-<p><%= @discussion_thread.content %></p>
+<div class="container">
+  <h2><%= @thread.title %></h2>
+  <p class="text-muted">Started by <%= @thread.user.name %></p>
 
-<% if current_user == @discussion_thread.user && current_user.admin? %>
-  <%= link_to "Edit Thread", edit_project_discussion_thread_path(@project, @discussion_thread), class: "btn btn-sm btn-outline-secondary me-2" %>
-  <%= link_to "Delete Thread", project_discussion_thread_path(@project, @discussion_thread), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-danger" %>
-<% end %>
-
-<hr>
-<h4>Messages</h4>
-
-<% @discussion_thread.messages.each do |message| %>
-  <div class="card mb-2">
-    <div class="card-body">
-      <p><%= message.content %></p>
-      <small class="text-muted">By <%= message.user.email %></small>
-
-      <% if message.user == current_user %>
-        <div class="mt-2">
-          <%= link_to "Edit", edit_project_discussion_thread_message_path(@project, @discussion_thread, message), class: "btn btn-sm btn-outline-secondary" %>
-          <%= link_to "Delete", project_discussion_thread_message_path(@project, @discussion_thread, message), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-danger" %>
-        </div>
-      <% end %>
-    </div>
-  </div>
-<% end %>
-
-<% if @project.users.include?(current_user) %>
   <hr>
-  <%= render 'messages/form', discussion_thread: @discussion_thread %>
-<% end %>
+
+  <h4>Messages</h4>
+  <% @messages.each do |message| %>
+    <div class="card mb-2">
+      <div class="card-body">
+        <p><%= message.content %></p>
+        <small class="text-muted">By <%= message.user.name %></small>
+
+        <% if message.user == current_user %>
+          <div class="mt-2 d-flex gap-2">
+            <%= link_to 'Edit', edit_project_discussion_thread_message_path(@project, @thread, message), class: "btn btn-sm btn-outline-primary" %>
+            <%= link_to 'Delete', project_discussion_thread_message_path(@project, @thread, message), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-sm btn-outline-danger" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <hr>
+
+  <% if @project.users.include?(current_user) %>
+    <%= form_with(model: [@project, @thread, Message.new], local: true) do |form| %>
+      <div class="mb-3">
+        <%= form.label :content, "Post a Message" %>
+        <%= form.text_area :content, class: "form-control" %>
+      </div>
+      <%= form.submit "Post", class: "btn btn-primary" %>
+    <% end %>
+  <% end %>
+</div>
