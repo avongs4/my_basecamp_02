@@ -28,7 +28,7 @@ gem "solid_cache"
 gem "solid_queue"
 
 
-gem 'cancancan', '~> 3.0'
+gem 'cancancan', "~> 3.0"
 
 
 
@@ -67,5 +67,6 @@ end
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
-  gem "selenium-webdriver"
+ 
+ gem "selenium-webdriver"
 end
