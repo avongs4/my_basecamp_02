@@ -48,6 +48,8 @@ production:
     database: mybasecamp2_production
     username: mybasecamp2
     password: <%= ENV["MYBASECAMP2_DATABASE_PASSWORD"] %>
+
+    
   cache:
     <<: *primary_production
     database: mybasecamp2_production_cache
