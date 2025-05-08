@@ -10,9 +10,7 @@ rackup      'config.ru'
 port        ENV.fetch("PORT") { 3000 }
 environment ENV.fetch("RAILS_ENV") { "production" }
 
-on_worker_boot do
-  
-end
+
 
 before_fork do
   ActiveRecord::Base.connection_pool.disconnect! if defined?(ActiveRecord)
