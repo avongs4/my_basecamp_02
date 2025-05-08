@@ -11,7 +11,7 @@ port        ENV.fetch("PORT") { 3000 }
 environment ENV.fetch("RAILS_ENV") { "production" }
 
 on_worker_boot do
-  ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
+  
 end
 
 before_fork do
