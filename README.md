@@ -74,10 +74,10 @@ Authentication
 Built with Devise
 
 Supports registration, login, logout, and password reset
-Use --------------- as the default admin: 
-Default admin created during seeding:
-email: nnooaahh24@gmail.com
+Use: 
+email: avongharuna@gmail.com 
 password: 123456
+as the default admin
 
 # Role-Based Permissions
 - Admin Users:
